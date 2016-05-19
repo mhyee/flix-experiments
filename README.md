@@ -9,3 +9,4 @@ comparison.
 Includes:
 
 - Fibonacci
+- pidigits
