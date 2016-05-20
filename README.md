@@ -9,4 +9,5 @@ comparison.
 Includes:
 
 - Fibonacci
+- n-body
 - pidigits
