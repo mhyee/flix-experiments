@@ -12,6 +12,7 @@ are very efficient due to cache locality and fewer memory allocations.)
 Includes:
 
 - Fibonacci
-- n-body
 - matrix multiplication (Flix only)
+- n-body
 - pidigits
+- shortest paths (Flix only)
