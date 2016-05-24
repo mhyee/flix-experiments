@@ -89,15 +89,14 @@ object NBody {
       (b1.m * b2.m) / distance(dx, dy, dz)
     }
 
-    def step(i: Int): Double = {
-      var x = 0
-      var s = this
-      while (x < i) {
-        s = s.advance(0.01)
-        x += 1
+    @scala.annotation.tailrec
+    final def step(i: Int): Double =
+      if (i == 0) energy
+      else {
+        val s1 = advance(0.01)
+        s1.step(i - 1)
       }
-      s.energy
-    }
+
   }
 
   val initJupiter = Body(
