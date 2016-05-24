@@ -1,6 +1,6 @@
 import scala.util.Random
 
-object RandomMatrix {
+object GenerateMatrices {
 
   def main(args: Array[String]): Unit = {
 
