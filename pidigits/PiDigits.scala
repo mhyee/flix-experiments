@@ -8,31 +8,33 @@ object PiDigits {
 
   val N: BigInt = 10000
 
+  def pi(i: BigInt): BigInt = piHelper(i, 0, 1, 1, 0, 1, 0, 0)
+
   def compTpl1(a2: BigInt, n1: BigInt, d1: BigInt, t1: BigInt, u: BigInt): (BigInt, BigInt) =
     if (a2 >= n1) (((n1 * 3) + a2) / d1, (((n1 * 3) + a2) % d1) + n1) else (t1, u)
+
   def compTpl2(a2: BigInt, n1: BigInt, d1: BigInt, u1: BigInt, i: BigInt, t2: BigInt): (BigInt, BigInt, BigInt) =
     if ((a2 >= n1) && (d1 > u1)) (i - 1, (a2 - (d1 * t2)) * 10, n1 * 10) else (i, a2, n1)
 
-  def pi(i: BigInt): BigInt = {
-    var (j,k,l,n,a,d,t,u): (BigInt,BigInt,BigInt,BigInt,BigInt,BigInt,BigInt,BigInt) = (i,0,1,1,0,1,0,0)
-    while (j != 0) {
-      k = k + 1
-      t = n << 1
-      n = n * k
-      a = a + t
-      l = l + 2
-      a = a * l
-      d = d * l
-      var tpl1 = compTpl1(a, n, d, t, u)
-      t = tpl1._1
-      u = tpl1._2
-      var tpl2 = compTpl2(a, n, d, u, j, t)
-      j = tpl2._1
-      a = tpl2._2
-      n = tpl2._3
+  def piHelper(i: BigInt, k: BigInt, l: BigInt, n: BigInt, a: BigInt, d: BigInt, t: BigInt, u: BigInt): BigInt =
+    if (i == 0) t
+    else {
+      val k1 = k + 1
+      val t1 = n << 1
+      val n1 = n * k1
+      val a1 = a + t1
+      val l1 = l + 2
+      val a2 = a1 * l1
+      val d1 = d * l1
+      val tpl1 = compTpl1(a2, n1, d1, t1, u)
+      val t2 = tpl1._1
+      val u1 = tpl1._2
+      val tpl2 = compTpl2(a2, n1, d1, u1, i, t2)
+      val i1 = tpl2._1
+      val a3 = tpl2._2
+      val n2 = tpl2._3
+      piHelper(i1, k1, l1, n2, a3, d1, t2, u1)
     }
-    t
-  }
 
   def main(args: Array[String]): Unit = {
     val start = System.nanoTime()
