@@ -12,14 +12,6 @@ namespace PiDigits {
 
     index Pi({digit}, {digit, value});
 
-    def fst(t: (BigInt, BigInt)): BigInt = match t with { case (x, _) => x }
-    def snd(t: (BigInt, BigInt)): BigInt = match t with { case (_, x) => x }
-    def fstOf3(t: (BigInt, BigInt, BigInt)): BigInt = match t with { case (x, _, _) => x }
-    def sndOf3(t: (BigInt, BigInt, BigInt)): BigInt = match t with { case (_, x, _) => x }
-    def trdOf3(t: (BigInt, BigInt, BigInt)): BigInt = match t with { case (_, _, x) => x }
-
-    def pi(i: BigInt): BigInt = piHelper(i, 0ii, 1ii, 1ii, 0ii, 1ii, 0ii, 0ii)
-
     def compTpl1(a2: BigInt, n1: BigInt, d1: BigInt, t1: BigInt, u: BigInt): (BigInt, BigInt) =
       if (a2 >= n1) (((n1 * 3ii) + a2) / d1, (((n1 * 3ii) + a2) % d1) + n1) else (t1, u)
 
@@ -35,16 +27,13 @@ namespace PiDigits {
            let l1 = l + 2ii in
            let a2 = a1 * l1 in
            let d1 = d * l1 in
-           let tpl1 = compTpl1(a2, n1, d1, t1, u) in
-           let t2 = fst(tpl1) in
-           let u1 = snd(tpl1) in
-           let tpl2 = compTpl2(a2, n1, d1, u1, i, t2) in
-           let i1 = fstOf3(tpl2) in
-           let a3 = sndOf3(tpl2) in
-           let n2 = trdOf3(tpl2) in
+           let (t2, u1) = compTpl1(a2, n1, d1, t1, u) in
+           let (i1, a3, n2) = compTpl2(a2, n1, d1, u1, i, t2) in
              piHelper(i1, k1, l1, n2, a3, d1, t2, u1)
 
-    Pi(0ii, pi(ndigits(0))).
+    def pi(i: BigInt): BigInt = piHelper(i, 0ii, 1ii, 1ii, 0ii, 1ii, 0ii, 0ii)
+
+    Pi(ndigits(0), pi(ndigits(0))).
 
 }
 
