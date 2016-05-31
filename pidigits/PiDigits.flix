@@ -13,7 +13,8 @@ namespace PiDigits {
     index Pi({digit}, {digit, value});
 
     def compTpl1(a2: BigInt, n1: BigInt, d1: BigInt, t1: BigInt, u: BigInt): (BigInt, BigInt) =
-      if (a2 >= n1) (((n1 * 3ii) + a2) / d1, (((n1 * 3ii) + a2) % d1) + n1) else (t1, u)
+      let tmp = (n1 * 3ii) + a2 in
+        if (a2 >= n1) (tmp / d1, (tmp % d1) + n1) else (t1, u)
 
     def compTpl2(a2: BigInt, n1: BigInt, d1: BigInt, u1: BigInt, i: BigInt, t2: BigInt): (BigInt, BigInt, BigInt) =
       if ((a2 >= n1) && (d1 > u1)) (i - 1ii, (a2 - (d1 * t2)) * 10ii, n1 * 10ii) else (i, a2, n1)

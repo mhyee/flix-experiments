@@ -10,32 +10,6 @@ class PiDigits {
 
     public static final BigInteger N = BigInteger.valueOf(10000);
 
-    public static BigInteger[] compTpl1(BigInteger a2, BigInteger n1, BigInteger d1, BigInteger t1, BigInteger u) {
-        BigInteger[] ret = new BigInteger[2];
-        if (a2.compareTo(n1) >= 0) {
-            ret[0] = ((n1.multiply(BigInteger.valueOf(3))).add(a2)).divide(d1);
-            ret[1] = (((n1.multiply(BigInteger.valueOf(3))).add(a2)).mod(d1)).add(n1);
-        } else {
-            ret[0] = t1;
-            ret[1] = u;
-        }
-        return ret;
-    }
-
-    public static BigInteger[] compTpl2(BigInteger a2, BigInteger n1, BigInteger d1, BigInteger u1, BigInteger i, BigInteger t2) {
-        BigInteger[] ret = new BigInteger[3];
-        if ((a2.compareTo(n1) >= 0) && (d1.compareTo(u1) > 0)) {
-            ret[0] = i.subtract(BigInteger.ONE);
-            ret[1] = (a2.subtract(d1.multiply(t2))).multiply(BigInteger.TEN);
-            ret[2] = n1.multiply(BigInteger.TEN);
-        } else {
-            ret[0] = i;
-            ret[1] = a2;
-            ret[2] = n1;
-        }
-        return ret;
-    }
-
     public static BigInteger pi(BigInteger i) {
         BigInteger j = i;
         BigInteger k = BigInteger.ZERO;
@@ -53,13 +27,17 @@ class PiDigits {
             l = l.add(BigInteger.valueOf(2));
             a = a.multiply(l);
             d = d.multiply(l);
-            BigInteger[] tpl1 = compTpl1(a, n, d, t, u);
-            t = tpl1[0];
-            u = tpl1[1];
-            BigInteger[] tpl2 = compTpl2(a, n, d, u, j, t);
-            j = tpl2[0];
-            a = tpl2[1];
-            n = tpl2[2];
+            if (a.compareTo(n) >= 0) {
+                BigInteger tmp = (n.multiply(BigInteger.valueOf(3))).add(a);
+                t = tmp.divide(d);
+                u = (tmp.mod(d)).add(n);
+                if (d.compareTo(u) > 0) {
+                    //System.out.print(t);
+                    j = j.subtract(BigInteger.ONE);
+                    a = (a.subtract(d.multiply(t))).multiply(BigInteger.TEN);
+                    n = n.multiply(BigInteger.TEN);
+                }
+            }
         }
         return t;
     }
