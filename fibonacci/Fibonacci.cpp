@@ -15,7 +15,7 @@ long fib(long n) {
 
 int main(int argv, char **argc) {
     auto start = std::chrono::high_resolution_clock::now();
-    long result = fib(N);
+    auto result = fib(N);
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / 1000000;
 
