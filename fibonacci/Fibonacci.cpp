@@ -13,7 +13,7 @@ long fib(long n) {
     }
 }
 
-int main(int argv, char **argc) {
+int main(int, char**) {
     auto start = std::chrono::high_resolution_clock::now();
     auto result = fib(N);
     auto end = std::chrono::high_resolution_clock::now();
