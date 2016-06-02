@@ -12,41 +12,40 @@ KB_PER_MB = 1024
 
 NUM_TRIALS = 5
 TIMEOUT = 15 * SEC_PER_MIN
-SEC_PER_SAMPLE = 0.1
+SAMPLE_PER_SEC = 0.1
+
+SCALA = "scala"
+GENERATOR = "../matrixmult/GenerateMatrices.scala"
+GENERATOR_SEED = "0"
+
+MATRIX_NAME = "Matrix.flix"
 
 FLIX = "java -Xmx8192M -jar ../../flix/out/flix.jar"
 FLIX_ARGS = ""
-FLIX_ANALYSIS = "../strong-update/StrongUpdate.flix"
-FLIX_FACTS = "../../flix-subench/%s.flix"
 FLIX_OUT = "flix.out"
 
-FLIX_BENCHMARKS = [
-  "470.lbm",
-  "181.mcf",
-  "429.mcf",
-  "256.bzip2",
-  "462.libquantum",
-  "164.gzip",
-  "401.bzip2",
-  "458.sjeng",
-  "433.milc",
-  "175.vpr",
-  "186.crafty",
-  "197.parser",
-  "482.sphinx3",
-  "300.twolf",
+SIZES = [
+  8,
+  16,
+  32,
+  64,
+  128,
+  256,
+  512,
+  1024,
+  2048,
+  4096,
+  8192,
+  16384,
+  32768,
+  65536,
+  131072,
+  262144,
+  524288,
+  1048576,
 ]
 # Benchmarks that timeout on Flix
-ALL_BENCHMARKS = FLIX_BENCHMARKS + [
-  "456.hmmer",
-  "464.h264ref",
-  "255.vortex",
-  "254.gap",
-  "253.perlbmk",
-  "445.gobmk",
-  "400.perlbench",
-  "176.gcc",
-  "403.gcc",
+ALL_SIZES = SIZES + [
 ]
 
 ################################################################################
@@ -55,14 +54,15 @@ ALL_BENCHMARKS = FLIX_BENCHMARKS + [
 
 # Run one trial of a benchmark.
 # Returns a triple [success, time, max_mem].
-def run_trial(benchmark, interpret)
+def run_trial(size, interpret)
+  # First, generate the matrix
+  `#{SCALA} #{GENERATOR} #{size} #{GENERATOR_SEED} > #{MATRIX_NAME}`
+
   # Run the benchmark in a new process
-  facts = FLIX_FACTS % benchmark
   args = FLIX_ARGS +
     if interpret then "-Xinterpreter"
     else "" end
-  pid = Process.spawn("#{FLIX} #{args} #{FLIX_ANALYSIS} #{facts}",
-                      :out => FLIX_OUT)
+  pid = Process.spawn("#{FLIX} #{args} #{MATRIX_NAME}", :out => FLIX_OUT)
   Process.detach pid
   success = false
   time = 0
@@ -77,7 +77,7 @@ def run_trial(benchmark, interpret)
         mem = `ps -o rss= -p #{pid}`
         break if mem.empty?
         max_mem = mem.to_i if mem.to_i > max_mem
-        sleep SEC_PER_SAMPLE
+        sleep SAMPLE_PER_SEC
       end
     end
 
@@ -96,25 +96,25 @@ def run_trial(benchmark, interpret)
     max_mem = nil
   end
 
-  `rm #{FLIX_OUT}`
+  `rm #{FLIX_OUT} #{MATRIX_NAME}`
 
   [success, time, max_mem]
 end
 
 # Run the given benchmark. Runs NUM_TRIALS trials and prints the averages.
-def run_benchmark(benchmark, interpret = false)
+def run_benchmark(size, interpret = false)
   type =
     if interpret then "interpreted"
     else "compiled" end
 
-  print "#{benchmark} (Flix #{type}), "
+  print "MatrixMult N = #{size} (Flix #{type}), "
 
   all_success = true
   total_time = 0.0
   total_max_mem = 0.0
 
   NUM_TRIALS.times do
-    success, time, max_mem = run_trial(benchmark, interpret)
+    success, time, max_mem = run_trial(size, interpret)
     all_success &&= success
     break unless success
     total_time += time
@@ -134,7 +134,7 @@ end
 
 def main
   puts "Benchmark, Time (s), Mem (MB)"
-  benchmarks = FLIX_BENCHMARKS
+  benchmarks = SIZES
   benchmarks.each {|b| run_benchmark(b, false) }
   benchmarks.each {|b| run_benchmark(b, true) }
 end
@@ -142,7 +142,7 @@ end
 trap "SIGINT" do
   puts
   print "Cleaning up... "
-  `rm #{FLIX_OUT}`
+  `rm #{FLIX_OUT} #{MATRIX_NAME}`
   puts "Exited."
   exit 130
 end
