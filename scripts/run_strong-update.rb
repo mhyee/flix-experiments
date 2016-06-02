@@ -12,7 +12,7 @@ KB_PER_MB = 1024
 
 NUM_TRIALS = 5
 TIMEOUT = 15 * SEC_PER_MIN
-SAMPLE_PER_SEC = 0.1
+SEC_PER_SAMPLE = 0.1
 
 FLIX = "java -Xmx8192M -jar ../../flix/out/flix.jar"
 FLIX_ARGS = ""
@@ -77,7 +77,7 @@ def run_trial(benchmark, interpret)
         mem = `ps -o rss= -p #{pid}`
         break if mem.empty?
         max_mem = mem.to_i if mem.to_i > max_mem
-        sleep SAMPLE_PER_SEC
+        sleep SEC_PER_SAMPLE
       end
     end
 
@@ -137,6 +137,14 @@ def main
   benchmarks = FLIX_BENCHMARKS
   benchmarks.each {|b| run_benchmark(b, false) }
   benchmarks.each {|b| run_benchmark(b, true) }
+end
+
+trap "SIGINT" do
+  puts
+  print "Cleaning up... "
+  `rm #{FLIX_OUT}`
+  puts "Exited."
+  exit 130
 end
 
 # Run the script
