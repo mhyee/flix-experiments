@@ -13,6 +13,12 @@ other languages, since they rely heavily on the solver and its datastore. (When
 rewritten for other languages, these benchmarks would probably use arrays, which
 are very efficient due to cache locality and fewer memory allocations.)
 
+The Strong Update analysis is a real benchmark (that is, not a toy program or
+contrived example), and was one of the benchmarks used for the PLDI 2016 Flix
+paper. The inputs for the analysis are kept in a separate, private repository.
+
+The `scripts` directory contains scripts for running these benchmarks.
+
 Includes:
 
 - Fibonacci
@@ -20,3 +26,4 @@ Includes:
 - n-body
 - pidigits
 - shortest paths (Flix only)
+- Strong Update analysis (Flix only, see above)
