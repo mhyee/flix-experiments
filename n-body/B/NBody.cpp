@@ -24,11 +24,11 @@ struct Body {
     Body(double x, double y, double z, double vx, double vy, double vz, double m) :
       x(x), y(y), z(z), vx(vx), vy(vy), vz(vz), m(m) {}
 
-    double getSpeedSq() {
+    double getSpeedSq() const {
         return (vx * vx) + (vy * vy) + (vz * vz);
     }
 
-    double getEnergy() {
+    double getEnergy() const {
         return 0.5 * m * getSpeedSq();
     }
 
@@ -124,7 +124,7 @@ struct SolarSystem {
         neptune.moveBody(dt);
     }
 
-    double energy() {
+    double energy() const {
         double posE = sun.getEnergy() + jupiter.getEnergy() + saturn.getEnergy() + uranus.getEnergy() + neptune.getEnergy();
         double negE = energyHelper(sun, jupiter) + energyHelper(sun, saturn) + energyHelper(sun, uranus) + energyHelper(sun, neptune) +
                       energyHelper(jupiter, saturn) + energyHelper(jupiter, uranus) + energyHelper(jupiter, neptune) +
@@ -141,7 +141,7 @@ struct SolarSystem {
     }
 
 private:
-    double energyHelper(Body &b1, Body &b2) {
+    double energyHelper(const Body &b1, const Body &b2) const {
         double dx = b1.x - b2.x;
         double dy = b1.y - b2.y;
         double dz = b1.z - b2.z;
@@ -159,11 +159,11 @@ private:
     }
 };
 
-int main(int argv, char **argc) {
+int main(int, char**) {
     auto start = std::chrono::high_resolution_clock::now();
     SolarSystem s;
-    double init = s.run(0);
-    double result = s.run(N);
+    auto init = s.run(0);
+    auto result = s.run(N);
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / 1000000;
 

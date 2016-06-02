@@ -8,7 +8,6 @@ require 'benchmark'
 
 N = 100000
 
-# Constants
 Pi = 3.141592653589793;
 SolarMass = 4.0 * (Pi * Pi);
 DaysPerYear = 365.24;
