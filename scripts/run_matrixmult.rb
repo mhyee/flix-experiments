@@ -31,7 +31,13 @@ SIZES = [
   64,
   128,
   256,
+]
+# Benchmarks that timeout on Flix
+TIMEOUT_SIZES = SIZES + [
   512,
+]
+# Benchmarks that OOM on Flix
+ALL_SIZES = TIMEOUT_SIZES + [
   1024,
   2048,
   4096,
@@ -43,9 +49,6 @@ SIZES = [
   262144,
   524288,
   1048576,
-]
-# Benchmarks that timeout on Flix
-ALL_SIZES = SIZES + [
 ]
 
 ################################################################################
@@ -107,7 +110,7 @@ def run_benchmark(size, interpret = false)
     if interpret then "interpreted"
     else "compiled" end
 
-  print "MatrixMult N = #{size} (Flix #{type}), "
+  print "MatrixMult (Flix #{type}), #{size}, "
 
   all_success = true
   total_time = 0.0
@@ -133,7 +136,7 @@ def run_benchmark(size, interpret = false)
 end
 
 def main
-  puts "Benchmark, Time (s), Mem (MB)"
+  puts "Benchmark, N (size), Time (s), Mem (MB)"
   benchmarks = SIZES
   benchmarks.each {|b| run_benchmark(b, false) }
   benchmarks.each {|b| run_benchmark(b, true) }
@@ -141,11 +144,12 @@ end
 
 trap "SIGINT" do
   puts
-  print "Cleaning up... "
+  $stderr.print "Cleaning up... "
   `rm #{FLIX_OUT} #{MATRIX_NAME}`
-  puts "Exited."
+  $stderr.puts "Exited."
   exit 130
 end
 
 # Run the script
 main
+
