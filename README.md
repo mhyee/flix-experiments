@@ -26,4 +26,4 @@ Includes:
 - n-body
 - pidigits
 - shortest paths (Flix only)
-- Strong Update analysis (Flix only, see above)
+- strongupdate (Flix only, see above)
