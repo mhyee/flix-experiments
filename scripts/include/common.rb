@@ -15,8 +15,10 @@ module Common
   TIMEOUT_MIN = 15 * SEC_PER_MIN
   SAMPLE_INTERVAL_SEC = 0.1
 
-  FLIX = "java -Xmx8192M -jar ../../flix/out/flix.jar"
+  FLIX = "java -Xmx8192M -Xss32M -jar ../../flix/out/flix.jar"
   BENCHMARK_OUT = "benchmark.out"
+
+  SCALA = "scala -J-Xmx8192M -J-Xss32M"
 
 ################################################################################
 # CONFIGURATION ENDS HERE ######################################################
@@ -32,7 +34,7 @@ module Common
   #  Returns: true if the trials succeeded, false otherwise (so we can skip
   #           subsequent benchmarks).
   def Common.run_benchmark(benchmark, impl, &block)
-    print "#{benchmark} (#{impl}), -, "
+    print "#{benchmark} (#{impl}), "
 
     result = nil
     total_time = 0.0

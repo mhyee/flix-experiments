@@ -1,6 +1,6 @@
 import scala.util.Random
 
-object GenerateShortestPaths {
+object generate {
 
   def main(args: Array[String]): Unit = {
 

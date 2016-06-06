@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative "include/common"
+require_relative "include/shortestpaths"
 require_relative "include/strongupdate"
 
 include Common
@@ -9,7 +10,8 @@ include Common
 $pid = nil
 
 def main
-  puts "Benchmark, N (size), Time (s), Mem (MB)"
+  puts "Benchmark, Time (s), Mem (MB)"
+  Shortestpaths.run
   Strongupdate.run
 end
 
@@ -17,7 +19,7 @@ def shutdown
   puts
   $stderr.puts "Cleaning up... "
   Process.kill('TERM', $pid) unless $pid.nil?
-  `rm -f #{BENCHMARK_OUT}`
+  `rm -f #{BENCHMARK_OUT} #{Shortestpaths::SHORTESTPATHS}`
   $stderr.puts "Exited."
 end
 

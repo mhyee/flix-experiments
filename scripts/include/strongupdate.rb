@@ -41,9 +41,8 @@ module Strongupdate
 ################################################################################
 
   def Strongupdate.run
-    benchmarks = BENCHMARKS
-    benchmarks.each {|b| break unless run_flix_compiled b }
-    benchmarks.each {|b| break unless run_flix_interpreted b }
+    BENCHMARKS.each {|b| break unless run_flix_compiled b }
+    BENCHMARKS.each {|b| break unless run_flix_interpreted b }
   end
 
 private
