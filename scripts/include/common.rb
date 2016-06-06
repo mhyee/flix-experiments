@@ -18,6 +18,16 @@ module Common
   FLIX = "java -Xmx8192M -Xss32M -jar ../../flix/out/flix.jar"
   BENCHMARK_OUT = "benchmark.out"
 
+  CC_OUT = "a.out"
+  CC_OPTS = "-std=c++14 -pedantic -Wall -Wextra -o #{CC_OUT}"
+  GCC = "g++ #{CC_OPTS}"
+  CLANG = "clang++ #{CC_OPTS}"
+
+  JAVAC = "javac -d ."
+  JAVA = "java -Xmx8192M -Xss32M"
+
+  RUBY = "ruby"
+
   SCALA = "scala -J-Xmx8192M -J-Xss32M"
 
 ################################################################################
@@ -127,10 +137,9 @@ private
       # Flix output format is "Successfully solved in XX msec."
       # Use grep and awk to extract XX, and then convert to seconds.
       # Note that the time includes a comma, which must be stripped out.
-      raw = `grep Success #{BENCHMARK_OUT} | awk '{print $4}'`.gsub(',', '')
+      raw = `grep Success #{BENCHMARK_OUT} | awk '{print $4}' | sed 's/,//g'`
     end
 
-    `rm -f #{BENCHMARK_OUT}`
     raw.to_f / MSEC_PER_SEC
   end
 

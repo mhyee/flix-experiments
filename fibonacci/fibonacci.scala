@@ -1,4 +1,4 @@
-object Fibonacci {
+object fibonacci {
 
   val N: Long = 35
 

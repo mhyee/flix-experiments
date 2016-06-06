@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
 require_relative "include/common"
-
+require_relative "include/fibonacci"
 require_relative "include/matrixmult"
 require_relative "include/shortestpaths"
-
 require_relative "include/strongupdate"
 
 include Common
@@ -14,17 +13,33 @@ $pid = nil
 
 def main
   puts "Benchmark, Time (s), Mem (MB)"
-  Matrixmult.run
-  Shortestpaths.run
+  Fibonacci.run
+#  Matrixmult.run
+#  Shortestpaths.run
 #  Strongupdate.run
+  cleanup
 end
 
 def shutdown
   puts
   $stderr.puts "Cleaning up... "
-  Process.kill('TERM', $pid) unless $pid.nil?
-  `rm -f #{BENCHMARK_OUT} #{Shortestpaths::SHORTESTPATHS} #{Matrixmult::MATRIXMULT}`
+  Process.kill('TERM', $pid) if (!$pid.nil? && process_exists?($pid))
+  cleanup
   $stderr.puts "Exited."
+end
+
+def cleanup
+  `rm -f #{BENCHMARK_OUT} #{CC_OUT} *.class`
+  `rm -f #{Shortestpaths::SHORTESTPATHS} #{Matrixmult::MATRIXMULT}`
+end
+
+def process_exists?(pid)
+  Process.kill(0, pid)
+  true
+rescue Errno::ESRCH # no process
+  false
+rescue Errno::EPERM # no permissions
+  true
 end
 
 Signal.trap("SIGINT")  { shutdown; exit 130 }

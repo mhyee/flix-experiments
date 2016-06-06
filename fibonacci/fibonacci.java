@@ -1,4 +1,4 @@
-class Fibonacci {
+class fibonacci {
 
     public static final long N = 35;
 

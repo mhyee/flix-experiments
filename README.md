@@ -21,7 +21,7 @@ The `scripts` directory contains scripts for running these benchmarks.
 
 Includes:
 
-- Fibonacci
+- fibonacci
 - matrixmult (Flix only)
 - n-body
 - pidigits
