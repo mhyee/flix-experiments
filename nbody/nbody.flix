@@ -1,4 +1,4 @@
-namespace NBody {
+namespace nbody {
 
     // n-body, from the Computer Language Benchmarks Game
     // http://benchmarksgame.alioth.debian.org/u64q/nbody-description.html#nbody

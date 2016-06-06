@@ -1,9 +1,9 @@
-object PiDigits {
+object pidigits {
 
   // pidigits, from the Computer Language Benchmarks Game.
   // http://benchmarksgame.alioth.debian.org/u64q/pidigits-description.html#pidigits
 
-  // This implementation is a close translation of the Flix program, which was loosely based on:
+  // This implementation is a loose translation of the Flix program, which was loosely based on:
   // http://benchmarksgame.alioth.debian.org/u64q/program.php?test=pidigits&lang=yarv&id=3
 
   val N: BigInt = 10000
@@ -16,6 +16,7 @@ object PiDigits {
   def compTpl2(a2: BigInt, n1: BigInt, d1: BigInt, u1: BigInt, i: BigInt, t2: BigInt): (BigInt, BigInt, BigInt) =
     if ((a2 >= n1) && (d1 > u1)) (i - 1, (a2 - (d1 * t2)) * 10, n1 * 10) else (i, a2, n1)
 
+  @scala.annotation.tailrec
   def piHelper(i: BigInt, k: BigInt, l: BigInt, n: BigInt, a: BigInt, d: BigInt, t: BigInt, u: BigInt): BigInt =
     if (i == 0) t
     else {

@@ -4,9 +4,12 @@ flix-experiments
 A collection of benchmarks for Flix.
 
 Some benchmarks are implemented in other languages (C++, Java, Scala, Ruby) for
-comparison. Furthermore, there are two implementations for each language: an
-"apples-to-apples" (A) version which is as close to Flix as possible, and an
-"apples-to-oranges" (B) version which is written more naturally.
+comparison. These implementations are written "naturally." They are written
+clearly in a style that fits with the language, are not optimized, and do not
+intentionally mimic the Flix code. Thus, they will use mutability and iteration
+instead of immutability and recursion, but the overall data structures and
+algorithms are the same. The Scala implementations are written in a functional
+style, and are therefore more similar to Flix than Java.
 
 The Flix-only benchmarks are ones that would not make sense for comparisons with
 other languages, since they rely heavily on the solver and its datastore. (When
@@ -23,7 +26,7 @@ Includes:
 
 - fibonacci
 - matrixmult (Flix only)
-- n-body
+- nbody
 - pidigits
 - shortestpaths (Flix only)
 - strongupdate (Flix only, see above)

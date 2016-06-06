@@ -1,4 +1,4 @@
-namespace PiDigits {
+namespace pidigits {
 
     // pidigits, from the Computer Language Benchmarks Game.
     // http://benchmarksgame.alioth.debian.org/u64q/pidigits-description.html#pidigits
