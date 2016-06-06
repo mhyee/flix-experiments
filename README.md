@@ -22,8 +22,8 @@ The `scripts` directory contains scripts for running these benchmarks.
 Includes:
 
 - Fibonacci
-- matrix multiplication (Flix only)
+- matrixmult (Flix only)
 - n-body
 - pidigits
-- shortest paths (Flix only)
+- shortestpaths (Flix only)
 - strongupdate (Flix only, see above)
