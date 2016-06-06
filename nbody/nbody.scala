@@ -6,7 +6,7 @@ object nbody {
   // This implementation is a loose translation of the Flix program, which was loosely based on:
   // http://benchmarksgame.alioth.debian.org/u64q/program.php?test=nbody&lang=java&id=2
 
-  val N = 100000
+  val N: Int = 100000
 
   val pi = 3.141592653589793
   val solarMass = 4.0 * (pi * pi)

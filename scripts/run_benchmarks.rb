@@ -3,6 +3,7 @@
 require_relative "include/common"
 require_relative "include/fibonacci"
 require_relative "include/matrixmult"
+require_relative "include/nbody"
 require_relative "include/pidigits"
 require_relative "include/shortestpaths"
 require_relative "include/strongupdate"
@@ -14,11 +15,12 @@ $pid = nil
 
 def main
   puts "Benchmark, Time (s), Mem (MB)"
-#  Fibonacci.run
-#  Matrixmult.run
+  Fibonacci.run
+  Matrixmult.run
+  Nbody.run
   Pidigits.run
-#  Shortestpaths.run
-#  Strongupdate.run
+  Shortestpaths.run
+  Strongupdate.run
   cleanup
 end
 
