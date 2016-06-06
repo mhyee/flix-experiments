@@ -6,7 +6,8 @@ module Strongupdate
 # CONFIGURATION BEGINS HERE ####################################################
 ################################################################################
 
-  ANALYSIS = "../strongupdate/strongupdate.flix"
+  NAME = "strongupdate"
+  ANALYSIS = "../#{NAME}/#{NAME}.flix"
   FACTS = "../../flix-subench/%s.flix"
 
   BENCHMARKS = [

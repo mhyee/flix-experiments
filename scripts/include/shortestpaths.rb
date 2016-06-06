@@ -6,31 +6,32 @@ module Shortestpaths
 # CONFIGURATION BEGINS HERE ####################################################
 ################################################################################
 
-  GENERATOR = "../shortestpaths/generate.scala"
+  NAME = "shortestpaths"
+  GENERATOR = "../#{NAME}/generate.scala"
   GENERATOR_SEED = "0"
 
-  SHORTESTPATHS = "shortestpaths.flix"
+  SHORTESTPATHS = NAME + ".flix"
 
   BENCHMARKS = [
-    8,        # 2 ** 03
-    16,       # 2 ** 04
-    32,       # 2 ** 05
-    64,       # 2 ** 06
-    128,      # 2 ** 07
-    256,      # 2 ** 08
-    512,      # 2 ** 09
-    1024,     # 2 ** 10
-    2048,     # 2 ** 11
-    4096,     # 2 ** 12
+    8,        # 2**03
+    16,       # 2**04
+    32,       # 2**05
+    64,       # 2**06
+    128,      # 2**07
+    256,      # 2**08
+    512,      # 2**09
+    1024,     # 2**10
+    2048,     # 2**11
+    4096,     # 2**12
     # Benchmarks that timeout on Flix
-    8192,     # 2 ** 13
-    16384,    # 2 ** 14
-    32768,    # 2 ** 15
-    65536,    # 2 ** 16
-    131072,   # 2 ** 17
-    262144,   # 2 ** 18
-    524288,   # 2 ** 19
-    1048576,  # 2 ** 20
+    8192,     # 2**13
+    16384,    # 2**14
+    32768,    # 2**15
+    65536,    # 2**16
+    131072,   # 2**17
+    262144,   # 2**18
+    524288,   # 2**19
+    1048576,  # 2**20
   ]
 
 ################################################################################
@@ -46,7 +47,7 @@ private
 
   def Shortestpaths.run_flix_compiled(size)
     `#{SCALA} #{GENERATOR} #{size} #{GENERATOR_SEED} > #{SHORTESTPATHS}`
-    Common.run_benchmark("shortestpaths N=#{size}", "Flix compiled") do
+    Common.run_benchmark("#{NAME} N=#{size}", "Flix compiled") do
       $pid = Process.spawn("#{FLIX} #{SHORTESTPATHS}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -55,7 +56,7 @@ private
 
   def Shortestpaths.run_flix_interpreted(size)
     `#{SCALA} #{GENERATOR} #{size} #{GENERATOR_SEED} > #{SHORTESTPATHS}`
-    Common.run_benchmark("shortestpaths N=#{size}", "Flix interpreted") do
+    Common.run_benchmark("#{NAME} N=#{size}", "Flix interpreted") do
       $pid = Process.spawn("#{FLIX} -Xinterpreter #{SHORTESTPATHS}",
                            :out => BENCHMARK_OUT)
       $pid
