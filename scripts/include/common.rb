@@ -84,25 +84,27 @@ module Common
     # Run the benchmark by calling the block.
     pid = block.call
 
-    begin
-      # Start the sampler in a separate thread.
-      # Once the benchmark process finishes, tell the sampler thread to stop.
-      Thread.fork { sample_mem(pid, in_queue, out_queue) }
-      Timeout.timeout(TIMEOUT_MIN) { Process.wait pid }
-      raise RuntimeError unless $?.exitstatus == 0
-      in_queue << :stop
-      [:success, get_time, out_queue.pop.to_f / KB_PER_MB]
-    rescue Timeout::Error
-      # Benchmark exceeded timeout, so kill process and thread.
+    # Start the sampler in a separate thread.
+    # Once the benchmark process finishes, tell the sampler thread to stop.
+    Thread.fork { sample_mem(pid, in_queue, out_queue) }
+    Timeout.timeout(TIMEOUT_MIN) { Process.wait pid }
+    raise RuntimeError unless $?.exitstatus == 0
+    in_queue << :stop
+    [:success, get_time, out_queue.pop.to_f / KB_PER_MB]
+  rescue Timeout::Error
+    # Benchmark exceeded timeout, so kill process and thread.
+    Process.detach pid
+    Process.kill('TERM', pid)
+    in_queue << :stop
+    [:timeout, nil, nil]
+  rescue RuntimeError
+    # Some other error, so kill process (if it exists) and thread.
+    if process_exists? pid then
+      Process.detach pid
       Process.kill('TERM', pid)
-      in_queue << :stop
-      [:timeout, nil, nil]
-    rescue RuntimeError
-      # Some other error, so kill process and thread.
-      # Benchmark exceeded timeout, so kill process and thread.
-      in_queue << :stop
-      [:error, nil, nil]
     end
+    in_queue << :stop
+    [:error, nil, nil]
   end
 
 private
@@ -141,6 +143,17 @@ private
     end
 
     raw.to_f / MSEC_PER_SEC
+  end
+
+  # If the given `pid` is nil, return false. Otherwise, it represents a process.
+  # If the process exists, return true. Otherwise return false.
+  def process_exists?(pid)
+    if pid.nil? then false
+    else Process.kill(0, pid); true; end
+  rescue Errno::ESRCH # no process
+    false
+  rescue Errno::EPERM # no permissions
+    true
   end
 
 end

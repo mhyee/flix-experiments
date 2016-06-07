@@ -27,7 +27,7 @@ end
 def shutdown
   puts
   $stderr.puts "Cleaning up... "
-  Process.kill('TERM', $pid) if (!$pid.nil? && process_exists?($pid))
+  Process.kill('TERM', $pid) if process_exists? $pid
   cleanup
   $stderr.puts "Exited."
 end
@@ -35,15 +35,6 @@ end
 def cleanup
   `rm -f #{BENCHMARK_OUT} #{CC_OUT} *.class`
   `rm -f #{Shortestpaths::SHORTESTPATHS} #{Matrixmult::MATRIXMULT}`
-end
-
-def process_exists?(pid)
-  Process.kill(0, pid)
-  true
-rescue Errno::ESRCH # no process
-  false
-rescue Errno::EPERM # no permissions
-  true
 end
 
 Signal.trap("SIGINT")  { shutdown; exit 130 }
