@@ -20,6 +20,7 @@ module Fibonacci
     45,
     50,
     55,
+    # Benchmarks that timeout
     60,
     65,
     70,

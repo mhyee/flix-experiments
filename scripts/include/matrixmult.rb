@@ -19,9 +19,9 @@ module Matrixmult
     64,       # 2**06
     128,      # 2**07
     256,      # 2**08
-    # Benchmarks that timeout on Flix
+    # Benchmarks that timeout
     512,      # 2**09
-    # Benchmarks that OOM on Flix
+    # Benchmarks that OOM
     1024,     # 2**10
     2048,     # 2**11
     4096,     # 2**12

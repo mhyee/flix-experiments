@@ -25,7 +25,7 @@ module Strongupdate
     "197.parser",
     "482.sphinx3",
     "300.twolf",
-    # Benchmarks that timeout on Flix
+    # Benchmarks that timeout
     "456.hmmer",
     "464.h264ref",
     "255.vortex",

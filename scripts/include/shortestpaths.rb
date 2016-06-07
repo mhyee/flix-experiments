@@ -22,8 +22,8 @@ module Shortestpaths
     512,      # 2**09
     1024,     # 2**10
     2048,     # 2**11
+    # Benchmarks that timeout
     4096,     # 2**12
-    # Benchmarks that timeout on Flix
     8192,     # 2**13
     16384,    # 2**14
     32768,    # 2**15
