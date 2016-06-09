@@ -50,7 +50,7 @@ private
 
   def Strongupdate.run_flix_compiled(benchmark)
     facts = FACTS % benchmark
-    Common.run_benchmark(benchmark, "Flix compiled") do
+    Common.run_benchmark("#{NAME} #{benchmark}", "Flix compiled") do
       $pid = Process.spawn("#{FLIX} #{ANALYSIS} #{facts}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -59,7 +59,7 @@ private
 
   def Strongupdate.run_flix_interpreted(benchmark)
     facts = FACTS % benchmark
-    Common.run_benchmark(benchmark, "Flix interpreted") do
+    Common.run_benchmark("#{NAME} #{benchmark}", "Flix interpreted") do
       $pid = Process.spawn("#{FLIX} -Xinterpreter #{ANALYSIS} #{facts}",
                             :out => BENCHMARK_OUT)
       $pid
