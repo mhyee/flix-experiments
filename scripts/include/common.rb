@@ -11,7 +11,7 @@ module Common
 # CONFIGURATION BEGINS HERE ####################################################
 ################################################################################
 
-  NUM_TRIALS = 5
+  NUM_TRIALS = 20
   TIMEOUT_MIN = 15 * SEC_PER_MIN
   SAMPLE_INTERVAL_SEC = 0.1
 
@@ -30,9 +30,6 @@ module Common
 
   SCALA = "scala -J-Xmx8192M -J-Xss32M"
 
-  DLV = "../../flix-sandbox/dlv"
-  DLV_ARGS = "-silent -nofacts"
-
 ################################################################################
 # CONFIGURATION ENDS HERE ######################################################
 ################################################################################
@@ -42,33 +39,33 @@ module Common
   #   Parameters:
   #     benchmark - the name of the benchmark to run
   #     impl      - the name of the implementation
+  #     input     - the input to the benchmark
   #     block     - a block wrapping a Process.spawn (which runs the actual
   #                 benchmark), returning the pid
   #  Returns: true if the trials succeeded, false otherwise (so we can skip
   #           subsequent benchmarks).
-  def Common.run_benchmark(benchmark, impl, &block)
-    print "#{benchmark} (#{impl}), "
-
+  def Common.run_benchmark(benchmark, impl, input, &block)
     result = nil
-    total_time = 0.0
-    total_max_mem = 0.0
+    times = []
+    mems = []
 
     NUM_TRIALS.times do
       result, time, max_mem = run_trial(block)
       break unless result == :success
-      total_time += time
-      total_max_mem += max_mem
+      times << time
+      mems << max_mem
     end
 
-    avg_time, avg_max_mem = case result
+    case result
       when :success then
-        ["%.1f" % (total_time / NUM_TRIALS),
-         "%.0f" % (total_max_mem / NUM_TRIALS)]
-      when :timeout then ["timeout", "-"]
-      else ["err", "err"]
-      end
-
-    puts "#{avg_time}, #{avg_max_mem}"
+        times.zip(mems).each do |t, m|
+          puts "#{benchmark}, #{impl}, #{input}, %.2f, %.0f" % [t, m]
+        end
+      when :timeout then
+        puts "#{benchmark}, #{impl}, #{input}, timeout, -"
+      else
+        puts "#{benchmark}, #{impl}, #{input}, err, err"
+    end
 
     result == :success
   end

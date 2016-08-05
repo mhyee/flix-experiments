@@ -14,11 +14,11 @@ include Common
 $pid = nil
 
 def main
-  puts "Benchmark, Time (s), Mem (MB)"
+  puts "Benchmark, Language, Input, Time (s), Mem (MB)"
   Fibonacci.run
-  Matrixmult.run
   Nbody.run
   Pidigits.run
+  Matrixmult.run
   Shortestpaths.run
   Strongupdate.run
   cleanup

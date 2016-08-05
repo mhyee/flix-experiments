@@ -9,8 +9,6 @@ module Strongupdate
   NAME = "strongupdate"
   ANALYSIS = "../#{NAME}/#{NAME}.flix"
   FACTS = "../../flix-subench/%s.flix"
-  DLV_ANALYSIS = "../#{NAME}/#{NAME}.dlv"
-  DLV_FACTS = "../../flix-subench/dlv/%s.dlv"
 
   BENCHMARKS = [
     "470.lbm",
@@ -44,7 +42,6 @@ module Strongupdate
 ################################################################################
 
   def Strongupdate.run
-    BENCHMARKS.each {|b| break unless run_dlv b }
     BENCHMARKS.each {|b| break unless run_flix_interpreted b }
     BENCHMARKS.each {|b| break unless run_flix_compiled b }
   end
@@ -53,7 +50,7 @@ private
 
   def Strongupdate.run_flix_compiled(benchmark)
     facts = FACTS % benchmark
-    Common.run_benchmark("#{NAME} #{benchmark}", "Flix compiled") do
+    Common.run_benchmark("#{NAME}", "Flix (compiled)", "#{benchmark}") do
       $pid = Process.spawn("#{FLIX} #{ANALYSIS} #{facts}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -62,17 +59,8 @@ private
 
   def Strongupdate.run_flix_interpreted(benchmark)
     facts = FACTS % benchmark
-    Common.run_benchmark("#{NAME} #{benchmark}", "Flix interpreted") do
+    Common.run_benchmark("#{NAME}", "Flix (interpreted)", "#{benchmark}") do
       $pid = Process.spawn("#{FLIX} -Xinterpreter #{ANALYSIS} #{facts}",
-                            :out => BENCHMARK_OUT)
-      $pid
-    end
-  end
-
-  def Strongupdate.run_dlv(benchmark)
-    facts = DLV_FACTS % benchmark
-    Common.run_benchmark("#{NAME} #{benchmark}", "DLV") do
-      $pid = Process.spawn("#{DLV} #{DLV_ARGS} #{DLV_ANALYSIS} #{facts}",
                             :out => BENCHMARK_OUT)
       $pid
     end

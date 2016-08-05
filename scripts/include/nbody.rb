@@ -50,7 +50,7 @@ private
   def Nbody.run_gcc(size, opt)
     `perl -pi -e 's/int N = \\d+/int N = #{size}/' #{CXX_FILE}`
     `#{GCC} -O#{opt} #{CXX_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "gcc -O#{opt}") do
+    Common.run_benchmark("#{NAME}", "gcc -O#{opt}", "#{size}") do
       $pid = Process.spawn("./#{CC_OUT}", :out => BENCHMARK_OUT)
       $pid
     end
@@ -59,7 +59,7 @@ private
   def Nbody.run_clang(size, opt)
     `perl -pi -e 's/int N = \\d+/int N = #{size}/' #{CXX_FILE}`
     `#{CLANG} -O#{opt} #{CXX_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "clang -O#{opt}") do
+    Common.run_benchmark("#{NAME}", "clang -O#{opt}", "#{size}") do
       $pid = Process.spawn("./#{CC_OUT}", :out => BENCHMARK_OUT)
       $pid
     end
@@ -67,7 +67,7 @@ private
 
   def Nbody.run_flix_compiled(size)
     `perl -pi -e 's/Int = \\d+/Int = #{size}/' #{FLIX_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Flix compiled") do
+    Common.run_benchmark("#{NAME}", "Flix (compiled)", "#{size}") do
       $pid = Process.spawn("#{FLIX} #{FLIX_FILE}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -76,7 +76,7 @@ private
 
   def Nbody.run_flix_interpreted(size)
     `perl -pi -e 's/Int = \\d+/Int = #{size}/' #{FLIX_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Flix interpreted") do
+    Common.run_benchmark("#{NAME}", "Flix (interpreted)", "#{size}") do
       $pid = Process.spawn("#{FLIX} -Xinterpreter #{FLIX_FILE}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -86,7 +86,7 @@ private
   def Nbody.run_java(size)
     `perl -pi -e 's/int N = \\d+/int N = #{size}/' #{JAVA_FILE}`
     `#{JAVAC} #{JAVA_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Java") do
+    Common.run_benchmark("#{NAME}", "Java", "#{size}") do
       $pid = Process.spawn("#{JAVA} #{NAME}", :out => BENCHMARK_OUT)
       $pid
     end
@@ -94,7 +94,7 @@ private
 
   def Nbody.run_ruby(size)
     `perl -pi -e 's/N = \\d+/N = #{size}/' #{RUBY_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Ruby") do
+    Common.run_benchmark("#{NAME}", "Ruby", "#{size}") do
       $pid = Process.spawn("#{RUBY} #{RUBY_FILE}", :out => BENCHMARK_OUT)
       $pid
     end
@@ -102,7 +102,7 @@ private
 
   def Nbody.run_scala(size)
     `perl -pi -e 's/N: Int = \\d+/N: Int = #{size}/' #{SCALA_FILE}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Scala") do
+    Common.run_benchmark("#{NAME}", "Scala", "#{size}") do
       $pid = Process.spawn("#{SCALA} #{SCALA_FILE}",
                            :out => BENCHMARK_OUT)
       $pid

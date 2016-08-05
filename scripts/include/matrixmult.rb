@@ -48,7 +48,7 @@ private
 
   def Matrixmult.run_flix_compiled(size)
     `#{SCALA} #{GENERATOR} #{size} #{GENERATOR_SEED} > #{MATRIXMULT}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Flix compiled") do
+    Common.run_benchmark("#{NAME}", "Flix (compiled)", "#{size}") do
       $pid = Process.spawn("#{FLIX} #{MATRIXMULT}",
                            :out => BENCHMARK_OUT)
       $pid
@@ -57,7 +57,7 @@ private
 
   def Matrixmult.run_flix_interpreted(size)
     `#{SCALA} #{GENERATOR} #{size} #{GENERATOR_SEED} > #{MATRIXMULT}`
-    Common.run_benchmark("#{NAME} N=#{size}", "Flix interpreted") do
+    Common.run_benchmark("#{NAME}", "Flix (interpreted)", "#{size}") do
       $pid = Process.spawn("#{FLIX} -Xinterpreter #{MATRIXMULT}",
                            :out => BENCHMARK_OUT)
       $pid
