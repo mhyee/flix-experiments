@@ -36,13 +36,14 @@ module Fibonacci
 ################################################################################
 
   def Fibonacci.run
-    (0..3).each {|i| BENCHMARKS.each {|b| break unless run_gcc(b, i) } }
-    (0..3).each {|i| BENCHMARKS.each {|b| break unless run_clang(b, i) } }
-    BENCHMARKS.each {|b| break unless run_flix_compiled b }
-    BENCHMARKS.each {|b| break unless run_flix_interpreted b }
-    BENCHMARKS.each {|b| break unless run_java b }
     BENCHMARKS.each {|b| break unless run_ruby b }
+    BENCHMARKS.each {|b| break unless run_flix_interpreted b }
+    BENCHMARKS.each {|b| break unless run_flix_compiled b }
     BENCHMARKS.each {|b| break unless run_scala b }
+    BENCHMARKS.each {|b| break unless run_java b }
+    BENCHMARKS.each {|b| break unless run_gcc(b, 3) }
+#    (0..3).each {|i| BENCHMARKS.each {|b| break unless run_gcc(b, i) } }
+#    (0..3).each {|i| BENCHMARKS.each {|b| break unless run_clang(b, i) } }
   end
 
 private

@@ -39,8 +39,8 @@ module Shortestpaths
 ################################################################################
 
   def Shortestpaths.run
-    BENCHMARKS.each {|b| break unless run_flix_compiled b }
     BENCHMARKS.each {|b| break unless run_flix_interpreted b }
+    BENCHMARKS.each {|b| break unless run_flix_compiled b }
   end
 
 private
