@@ -1,3 +1,4 @@
+require 'benchmark'
 require 'timeout'
 require 'thread'
 
@@ -30,6 +31,9 @@ module Common
 
   SCALA = "scala -J-Xmx8192M -J-Xss32M"
 
+  DLV = "../../flix-sandbox/dlv"
+  DLV_ARGS = "-silent -nofacts"
+
 ################################################################################
 # CONFIGURATION ENDS HERE ######################################################
 ################################################################################
@@ -40,17 +44,18 @@ module Common
   #     benchmark - the name of the benchmark to run
   #     impl      - the name of the implementation
   #     input     - the input to the benchmark
+  #     is_dlv    - true if the benchmark is DLV
   #     block     - a block wrapping a Process.spawn (which runs the actual
   #                 benchmark), returning the pid
-  #  Returns: true if the trials succeeded, false otherwise (so we can skip
-  #           subsequent benchmarks).
-  def Common.run_benchmark(benchmark, impl, input, &block)
+  #   Returns: true if the trials succeeded, false otherwise (so we can skip
+  #            subsequent benchmarks).
+  def Common.run_benchmark(benchmark, impl, input, is_dlv = false, &block)
     result = nil
     times = []
     mems = []
 
     NUM_TRIALS.times do
-      result, time, max_mem = run_trial(block)
+      result, time, max_mem = run_trial(block, is_dlv)
       break unless result == :success
       times << time
       mems << max_mem
@@ -74,23 +79,41 @@ module Common
   # the time and memory usage of running the benchmark. Tries to handle errors
   # (timeout, benchmark process dying) and returns something sensible.
   #   Parameters:
-  #     block - a block wrapping a Process.spawn (which runs the actual
-  #             benchmark), returning the pid
+  #     block  - a block wrapping a Process.spawn (which runs the actual
+  #              benchmark), returning the pid
+  #     id_dlv - true if the benchmark is DLV
   #   Returns: the triple [result, time, max_mem]
-  def Common.run_trial(block)
+  def Common.run_trial(block, is_dlv = false)
     in_queue = Queue.new
     out_queue = Queue.new
 
-    # Run the benchmark by calling the block.
-    pid = block.call
+    if is_dlv then
+      # Run the benchmark by calling the block.
+      # To get the execution time of DLV, wrap it in a Benchmark block.
+      pid = nil
+      bm_time = Benchmark.realtime do
+        pid = block.call
 
-    # Start the sampler in a separate thread.
-    # Once the benchmark process finishes, tell the sampler thread to stop.
-    Thread.fork { sample_mem(pid, in_queue, out_queue) }
-    Timeout.timeout(TIMEOUT_MIN) { Process.wait pid }
-    raise RuntimeError unless $?.exitstatus == 0
-    in_queue << :stop
-    [:success, get_time, out_queue.pop.to_f / KB_PER_MB]
+        # Start the sampler in a separate thread.
+        # Once the benchmark process finishes, tell the sampler thread to stop.
+        Thread.fork { sample_mem(pid, in_queue, out_queue) }
+        Timeout.timeout(TIMEOUT_MIN) { Process.wait pid }
+      end
+      raise RuntimeError unless $?.exitstatus == 0
+      in_queue << :stop
+      [:success, bm_time, out_queue.pop.to_f / KB_PER_MB]
+    else
+      # Run the benchmark by calling the block.
+      pid = block.call
+
+      # Start the sampler in a separate thread.
+      # Once the benchmark process finishes, tell the sampler thread to stop.
+      Thread.fork { sample_mem(pid, in_queue, out_queue) }
+      Timeout.timeout(TIMEOUT_MIN) { Process.wait pid }
+      raise RuntimeError unless $?.exitstatus == 0
+      in_queue << :stop
+      [:success, get_time, out_queue.pop.to_f / KB_PER_MB]
+    end
   rescue Timeout::Error
     # Benchmark exceeded timeout, so kill process and thread.
     Process.detach pid

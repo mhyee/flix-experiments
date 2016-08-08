@@ -9,6 +9,8 @@ module Strongupdate
   NAME = "strongupdate"
   ANALYSIS = "../#{NAME}/#{NAME}.flix"
   FACTS = "../../flix-subench/%s.flix"
+  DLV_ANALYSIS = "../#{NAME}/#{NAME}.dlv"
+  DLV_FACTS = "../../flix-subench/dlv/%s.dlv"
 
   BENCHMARKS = [
     "470.lbm",
@@ -19,13 +21,15 @@ module Strongupdate
     "164.gzip",
     "401.bzip2",
     "458.sjeng",
+    # Benchmarks that timeout on DLV
     "433.milc",
     "175.vpr",
     "186.crafty",
+    # Benchmarks that timeout on Flix (interpreted)
     "197.parser",
     "482.sphinx3",
     "300.twolf",
-    # Benchmarks that timeout
+    # Benchmarks that timeout on Flix (compiled)
     "456.hmmer",
     "464.h264ref",
     "255.vortex",
@@ -42,11 +46,21 @@ module Strongupdate
 ################################################################################
 
   def Strongupdate.run
+    BENCHMARKS.each {|b| break unless run_dlv b }
     BENCHMARKS.each {|b| break unless run_flix_interpreted b }
     BENCHMARKS.each {|b| break unless run_flix_compiled b }
   end
 
 private
+
+  def Strongupdate.run_dlv(benchmark)
+    facts = DLV_FACTS % benchmark
+    Common.run_benchmark("#{NAME}", "DLV", "#{benchmark}", is_dlv = true) do
+      $pid = Process.spawn("#{DLV} #{DLV_ANALYSIS} #{facts}",
+                           :out => BENCHMARK_OUT)
+      $pid
+    end
+  end
 
   def Strongupdate.run_flix_compiled(benchmark)
     facts = FACTS % benchmark
