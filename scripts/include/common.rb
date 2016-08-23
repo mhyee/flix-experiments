@@ -64,12 +64,12 @@ module Common
     case result
       when :success then
         times.zip(mems).each do |t, m|
-          puts "#{benchmark}, #{impl}, #{input}, %.2f, %.0f" % [t, m]
+          puts "#{benchmark},#{impl},#{input},%.2f,%.0f" % [t, m]
         end
       when :timeout then
-        puts "#{benchmark}, #{impl}, #{input}, timeout, -"
+        puts "#{benchmark},#{impl},#{input},timeout,-"
       else
-        puts "#{benchmark}, #{impl}, #{input}, err, err"
+        puts "#{benchmark},#{impl},#{input},err,err"
     end
 
     result == :success
