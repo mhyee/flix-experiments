@@ -16,7 +16,7 @@ module Common
   TIMEOUT_MIN = 15 * SEC_PER_MIN
   SAMPLE_INTERVAL_SEC = 0.1
 
-  FLIX = "java -Xmx8192M -Xss32M -jar ../../flix/out/flix.jar"
+  FLIX = "java -Xmx8192M -Xss128M -jar ../../flix/out/flix.jar"
   BENCHMARK_OUT = "benchmark.out"
 
   CC_OUT = "a.out"
